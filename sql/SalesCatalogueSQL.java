@@ -14,6 +14,7 @@ public class SalesCatalogueSQL extends BaseSQL{
         ResultSet rs;
         int numRows = 0;
         String[] brand = new AccountSQL().getAccountData(ID);
+        try{
             st = con.createStatement();
             rs = st.executeQuery("select count(*) from sales where brand = '"+brand[4]+"'");
             while(rs.next()){
@@ -21,6 +22,9 @@ public class SalesCatalogueSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get sales!");
+        }
         return numRows;
     }
 
@@ -31,6 +35,7 @@ public class SalesCatalogueSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         String sql = "SELECT * FROM sales WHERE brand = '"+brand[4]+"'";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(sql);
             int i = 0;
@@ -45,11 +50,15 @@ public class SalesCatalogueSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get sales!");
+        }
         return s;
     }
 
     public void addSale(Sale s) throws SQLException {
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("INSERT INTO sales" +
                     "(idOfProduct, quantity, price, finalPrice, brand, dateYMD)" +
                     "VALUES(?,?,?,?,?,STR_TO_DATE(?,'%Y-%m-%d'))");
@@ -64,12 +73,19 @@ public class SalesCatalogueSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot add sales!");
+        }
     }
 
     public void deleteSale(String id) throws SQLException {
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from sales where idOfProduct = '"+id+"'");
             s.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot delete sale!");
+        }
     }
 
     public String getDate() {

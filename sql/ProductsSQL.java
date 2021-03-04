@@ -10,13 +10,17 @@ public class ProductsSQL extends BaseSQL{
         Statement st = null;
         ResultSet rs = null;
         int numRows = 0;
+        try {
             st = con.createStatement();
             rs = st.executeQuery("select count(*) from products_catalogue");
-            while(rs.next()){
+            while (rs.next()) {
                 numRows = rs.getInt("count(*)");
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get products!");
+        }
         return numRows;
     }
 
@@ -26,6 +30,7 @@ public class ProductsSQL extends BaseSQL{
         Statement st = null;
         ResultSet rs = null;
         String query = "select * from products_catalogue";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(query);
             int i = 0;
@@ -42,11 +47,15 @@ public class ProductsSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get products!");
+        }
         return products;
     }
 
     public void addProduct(Product p) throws SQLException {
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("INSERT INTO products_catalogue" +
                     "(product_ID, brand, color, description,price,productType,quantity,section)" +
                     "VALUES(?,?,?,?,?,?,?,?)");
@@ -63,16 +72,24 @@ public class ProductsSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot add product!");
+        }
     }
 
     public void deleteProduct(String id) throws SQLException {
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from products_catalogue where product_ID = '"+id+"'");
             s.close();
+    }catch(SQLException e) {
+        throw new SQLException("Cannot delete products!");
+        }
     }
 
     public void updateMySQLTable(Product p) throws SQLException {
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("update products_catalogue set" +
                     " brand = ?, color =?, description=?,price=?,productType=?,quantity=?,section=?" +
                     "where product_ID = ?");
@@ -90,5 +107,8 @@ public class ProductsSQL extends BaseSQL{
             if (ps != null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot update products!");
+        }
     }
 }

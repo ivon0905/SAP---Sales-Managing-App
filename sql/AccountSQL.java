@@ -9,9 +9,10 @@ public class AccountSQL extends BaseSQL{
         Statement st = null;
         ResultSet rs = null;
         String query = "select * from sales_managing.sales_representatives where id = '"+id+"'";
+        try {
             st = con.createStatement();
             rs = st.executeQuery(query);
-            while(rs.next()) {
+            while (rs.next()) {
                 o[0] = rs.getString("name");
                 o[1] = rs.getString("lastName");
                 o[2] = rs.getString("email");
@@ -20,6 +21,9 @@ public class AccountSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch (SQLException e){
+            throw new SQLException("Cannot get account data!");
+        }
         return o;
     }
 }

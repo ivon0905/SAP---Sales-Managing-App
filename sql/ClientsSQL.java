@@ -12,10 +12,11 @@ public class ClientsSQL extends BaseSQL{
         Statement st = null;
         ResultSet rs = null;
         String query = "select * from clients";
+        try {
             st = con.createStatement();
             rs = st.executeQuery(query);
             int i = 0;
-            while (rs.next()){
+            while (rs.next()) {
                 c[i][0] = rs.getString("first_name");
                 c[i][1] = rs.getString("last_Name");
                 c[i][2] = rs.getString("email");
@@ -24,12 +25,16 @@ public class ClientsSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get client data!");
+        }
         return c;
     }
-    public int getNumberOfClients() throws SQLException {
+    private int getNumberOfClients() throws SQLException {
         Statement st;
         ResultSet rs;
         int numRows = 0;
+        try {
             st = con.createStatement();
             rs = st.executeQuery("select count(*) from clients");
             while(rs.next()){
@@ -37,10 +42,15 @@ public class ClientsSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get number of clients!");
+        }
         return numRows;
     }
+
     public void addClient(Client c) throws SQLException {
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("INSERT INTO clients"
                     +"(first_name, last_Name, email,phonenumber)" +
                     "VALUES(?,?,?,?)");
@@ -54,14 +64,24 @@ public class ClientsSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot add new client!");
+        }
     }
+
     public void deleteClient(String email) throws SQLException {
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from clients where email = '"+email+"'");
             s.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot delete client!");
+        }
     }
+
     public void updateMySQLTable(Client c) throws SQLException {
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("update clients set" +
                     " first_name = ?, last_name =?, email=?" +
                     "where phonenumber = ?");
@@ -75,5 +95,8 @@ public class ClientsSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot update client data!");
+        }
     }
 }

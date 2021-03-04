@@ -11,6 +11,7 @@ public class SalesAnalysisSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         String sql = "SELECT * FROM sales";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(sql);
             int i = 0;
@@ -25,6 +26,9 @@ public class SalesAnalysisSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get products!");
+        }
         return s;
     }
 
@@ -35,6 +39,7 @@ public class SalesAnalysisSQL extends BaseSQL{
         ResultSet rs;
         int i = 0;
         String query = "select * from sales where brand = '"+brand+"'";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()){
@@ -48,6 +53,9 @@ public class SalesAnalysisSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get products!");
+        }
         Object[][] sales = new Object[i][6];
         System.arraycopy(s,0,sales,0,i);
         return sales;
@@ -81,6 +89,7 @@ public class SalesAnalysisSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         int numRows = 0;
+        try{
             st = con.createStatement();
             rs = st.executeQuery("select count(*) from sales");
             while(rs.next()){
@@ -88,6 +97,9 @@ public class SalesAnalysisSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+    }catch(SQLException e){
+        throw new SQLException("Cannot get products!");
+    }
         return numRows;
     }
 
@@ -97,6 +109,7 @@ public class SalesAnalysisSQL extends BaseSQL{
         String sql = "SELECT DISTINCT brand FROM sales";
         Statement st;
         ResultSet rs;
+        try{
             st = con.createStatement();
             rs = st.executeQuery(sql);
             while(rs.next()){
@@ -105,6 +118,9 @@ public class SalesAnalysisSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get products!");
+        }
         String[] b = new String[i];
         System.arraycopy(brands,0,b,0, i);
         return b;

@@ -13,6 +13,7 @@ public class ManagersSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         String query = "select * from sales_representatives";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(query);
             int i = 0;
@@ -27,6 +28,9 @@ public class ManagersSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get sales representative data!");
+        }
         return products;
     }
 
@@ -34,6 +38,7 @@ public class ManagersSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         int numRows = 0;
+        try{
             st = con.createStatement();
             rs = st.executeQuery("select count(*) from sales_representatives");
             while(rs.next()){
@@ -41,22 +46,34 @@ public class ManagersSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get number of sales representatives!");
+        }
         return numRows;
     }
 
     public void deleteManager(String id) throws SQLException{
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from sales_representatives where id = '"+id+"'");
             s.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot delete sales representative data!");
+        }
     }
     public void deletePassAndUser(String id) throws SQLException{
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from users_of_app where id = '"+id+"'");
             s.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot delete sales representative data!");
+        }
     }
 
     public void updateMySQLTable(Manager m) throws SQLException{
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("update sales_representatives set" +
                     " name = ?, lastName =?, email=?,phoneNum=?,brand=?" +
                     "where id = ?");
@@ -72,6 +89,9 @@ public class ManagersSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot update sales representative data!");
+        }
     }
 
     public Object[][] getRequests() throws SQLException{
@@ -80,6 +100,7 @@ public class ManagersSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         String query = "select * from new_accounts";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(query);
             int i = 0;
@@ -93,6 +114,9 @@ public class ManagersSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get requests data!");
+        }
         return r;
     }
 
@@ -100,6 +124,7 @@ public class ManagersSQL extends BaseSQL{
         Statement st;
         ResultSet rs;
         int numRows = 0;
+        try{
             st = con.createStatement();
             rs = st.executeQuery("select count(*) from new_accounts");
             while(rs.next()){
@@ -107,12 +132,16 @@ public class ManagersSQL extends BaseSQL{
             }
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get number of requests!");
+        }
         return numRows;
     }
 
     public Manager addManagerToSQL(NewAccount n) throws SQLException {
         PreparedStatement ps = null;
         Manager m = null;
+        try{
             ps = con.prepareStatement("INSERT INTO sales_representatives"
                     +"(id, name, lastName, email,phoneNum,brand)" +
                     "VALUES(?,?,?,?,?,?)");
@@ -131,6 +160,9 @@ public class ManagersSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot add new sales representative!");
+        }
         return m;
     }
 
@@ -139,6 +171,7 @@ public class ManagersSQL extends BaseSQL{
         ResultSet rs;
         String user = "", pass="";
         String query = "select * from new_accounts where brand = '"+brand+"'";
+        try{
             st = con.createStatement();
             rs = st.executeQuery(query);
             while(rs.next()) {
@@ -148,10 +181,14 @@ public class ManagersSQL extends BaseSQL{
             setUserAndPass(user,pass,brand,id);
             st.close();
             rs.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot get request data!");
+        }
     }
 
     public void setUserAndPass(String user,String pass,String brand, String id) throws SQLException {
         PreparedStatement ps = null;
+        try{
             ps = con.prepareStatement("INSERT INTO users_of_app"
                     +"(username, password, app_role, brand, id)" +
                     "VALUES(?,?,?,?,?)");
@@ -165,18 +202,29 @@ public class ManagersSQL extends BaseSQL{
             if(ps!=null) {
                 ps.close();
             }
+        }catch(SQLException e){
+            throw new SQLException("Cannot set sales representative data!");
+        }
     }
 
     public void delete(String email) throws SQLException {
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from new_accounts where email = '"+email+"'");
             s.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot delete request data!");
+        }
     }
 
     public void deleteRequest(NewAccount n) throws SQLException {
+        try{
             Statement s = con.createStatement();
             s.executeUpdate("delete from new_accounts where email = '"+n.getEmail()+"'");
             s.close();
+        }catch(SQLException e){
+            throw new SQLException("Cannot delete request data!");
+        }
     }
 
     public int getId() throws SQLException {
@@ -184,6 +232,8 @@ public class ManagersSQL extends BaseSQL{
         ResultSet rs;
         String query = "select * from sales_representatives";
         String id = "";
+        int ID = 0;
+        try{
             st = con.createStatement();
             rs = st.executeQuery(query);
             while (rs.next()){
@@ -191,7 +241,10 @@ public class ManagersSQL extends BaseSQL{
             }
             st.close();
             rs.close();
-        int ID = Integer.valueOf(id)+1;
+            ID = Integer.valueOf(id)+1;
+        }catch(SQLException e){
+            throw new SQLException("Cannot get sales representative data!");
+        }
         return ID;
     }
 }
